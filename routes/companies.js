@@ -3,13 +3,12 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
-const {
-  ensureCorrectUser,
-  ensureLoggedIn,
-  ensureCorrectCompany
-} = require('../middleware/auth');
+const { validate } = require('jsonschema');
+const companySchema = require('../schemas/companySchema');
+const companyPatchSchema = require('../schemas/companyPatchSchema');
+const { ensureLoggedIn, ensureCorrectCompany } = require('../middleware/auth');
 
-router.get('', ensureLoggedIn, async function(req, res, next) {
+router.get('', ensureLoggedIn, async (req, res, next) => {
   try {
     const data = await db.query('SELECT * FROM companies');
     return res.json(data.rows[0]);
@@ -18,7 +17,7 @@ router.get('', ensureLoggedIn, async function(req, res, next) {
   }
 });
 
-router.get('/:id', ensureLoggedIn, async function(req, res, next) {
+router.get('/:id', ensureLoggedIn, async (req, res, next) => {
   try {
     const companyData = await db.query('SELECT * FROM companies WHERE id=$1', [
       req.params.id
@@ -36,6 +35,10 @@ router.get('/:id', ensureLoggedIn, async function(req, res, next) {
 
 router.post('', async (req, res, next) => {
   try {
+    const validation = validate(req.body, companySchema);
+    if (!validation.valid) {
+      return next(validation.errors.map(e => e.stack));
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newCompany = await db.query(
       'INSERT INTO companies (name, logo, handle, password) VALUES ($1, $2, $3, $4) RETURNING name, logo, handle',
@@ -49,6 +52,10 @@ router.post('', async (req, res, next) => {
 
 router.post('/auth', async (req, res, next) => {
   try {
+    const validation = validate(req.body, companyPatchSchema);
+    if (!validation.valid) {
+      return next(validation.errors.map(e => e.stack));
+    }
     const found_company = await db.query(
       'SELECT * FROM companies WHERE handle=$1',
       [req.body.handle]

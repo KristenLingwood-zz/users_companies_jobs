@@ -1,0 +1,50 @@
+{
+  "$id": "http://localhost:3000/users",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "first_name": {
+      "$id": "/properties/first_name",
+      "type": "string",
+      "title": "The First_name Schema ",
+      "default": "",
+      "examples": ["Harry"]
+    },
+    "last_name": {
+      "$id": "/properties/last_name",
+      "type": "string",
+      "title": "The Last_name Schema ",
+      "default": "",
+      "examples": ["Potter"]
+    },
+    "email": {
+      "$id": "/properties/email",
+      "type": "string",
+      "title": "The Email Schema ",
+      "default": "",
+      "examples": ["lived@hogwarts.com"]
+    },
+    "photo": {
+      "$id": "/properties/photo",
+      "type": "string",
+      "title": "The Photo Schema ",
+      "default": "",
+      "examples": ["none.com"]
+    },
+    "username": {
+      "$id": "/properties/username",
+      "type": "string",
+      "title": "The Username Schema ",
+      "default": "",
+      "examples": ["harry"]
+    },
+    "password": {
+      "$id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema ",
+      "default": "",
+      "examples": ["1234"]
+    }
+  },
+  "required": ["username", "password"]
+}

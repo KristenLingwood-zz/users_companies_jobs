@@ -3,9 +3,12 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
+const { validate } = require('jsonschema');
+const userSchema = require('../schemas/userSchema');
+const userPatchSchema = require('../schemas/userPatchSchema');
 const { ensureCorrectUser, ensureLoggedIn } = require('../middleware/auth');
 
-router.get('', ensureLoggedIn, async function(req, res, next) {
+router.get('', ensureLoggedIn, async (req, res, next) => {
   try {
     const data = await db.query('SELECT * FROM users');
     return res.json(data.rows);
@@ -14,7 +17,7 @@ router.get('', ensureLoggedIn, async function(req, res, next) {
   }
 });
 
-router.get('/:id', ensureLoggedIn, async function(req, res, next) {
+router.get('/:id', ensureLoggedIn, async (req, res, next) => {
   try {
     const data = await db.query('SELECT * FROM users WHERE id=$1', [
       req.params.id
@@ -25,8 +28,13 @@ router.get('/:id', ensureLoggedIn, async function(req, res, next) {
   }
 });
 
-router.post('', async function(req, res, next) {
+router.post('', async (req, res, next) => {
   try {
+    const validation = validate(req.body, userSchema);
+    console.log(validation);
+    if (!validation.valid) {
+      return next(validation.errors.map(e => e.stack));
+    }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const data = await db.query(
       'INSERT INTO users (first_name, last_name, email, photo, username, password) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
@@ -79,8 +87,12 @@ router.post('/auth', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', ensureCorrectUser, async function(req, res, next) {
+router.patch('/:id', ensureCorrectUser, async (req, res, next) => {
   try {
+    const validation = validate(req.body, userPatchSchema);
+    if (!validation.valid) {
+      return next(validation.errors.map(e => e.stack));
+    }
     const data = await db.query(
       'UPDATE users SET first_name=$1, last_name=$2, email=$3, photo=$4 WHERE id=$5 RETURNING *',
       [
@@ -97,7 +109,7 @@ router.patch('/:id', ensureCorrectUser, async function(req, res, next) {
   }
 });
 
-router.delete('/:id', ensureCorrectUser, async function(req, res, next) {
+router.delete('/:id', ensureCorrectUser, async (req, res, next) => {
   try {
     await db.query('DELETE FROM users WHERE ID=$1', [req.params.id]);
     return res.json({ message: 'user deleted' });

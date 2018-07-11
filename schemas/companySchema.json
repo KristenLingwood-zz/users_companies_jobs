@@ -1,0 +1,36 @@
+{
+  "$id": "http://localhost:3000/companies",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "$id": "/properties/name",
+      "type": "string",
+      "title": "The Name Schema ",
+      "default": "",
+      "examples": ["awesomeINC"]
+    },
+    "logo": {
+      "$id": "/properties/logo",
+      "type": "string",
+      "title": "The Logo Schema ",
+      "default": "",
+      "examples": ["google.com"]
+    },
+    "handle": {
+      "$id": "/properties/handle",
+      "type": "string",
+      "title": "The Handle Schema ",
+      "default": "",
+      "examples": ["awesome"]
+    },
+    "password": {
+      "$id": "/properties/password",
+      "type": "string",
+      "title": "The Password Schema ",
+      "default": "",
+      "examples": ["1234"]
+    }
+  },
+  "required": ["handle", "password"]
+}

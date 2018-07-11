@@ -1,0 +1,43 @@
+{
+  "$id": "http://localhost:3000/users",
+  "type": "object",
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "first_name": {
+      "$id": "/properties/first_name",
+      "type": "string",
+      "title": "The First_name Schema ",
+      "default": "",
+      "examples": ["Hermione"]
+    },
+    "last_name": {
+      "$id": "/properties/last_name",
+      "type": "string",
+      "title": "The Last_name Schema ",
+      "default": "",
+      "examples": ["Granger"]
+    },
+    "email": {
+      "$id": "/properties/email",
+      "type": "string",
+      "title": "The Email Schema ",
+      "default": "",
+      "examples": ["clever@hogwarts.com"]
+    },
+    "photo": {
+      "$id": "/properties/photo",
+      "type": "string",
+      "title": "The Photo Schema ",
+      "default": "",
+      "examples": ["none.com"]
+    },
+    "company_id": {
+      "$id": "/properties/company_id",
+      "type": "integer",
+      "title": "The Company_id Schema ",
+      "default": 0,
+      "examples": [2]
+    }
+  }
+}
